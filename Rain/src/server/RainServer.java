@@ -22,7 +22,9 @@ public class RainServer {
 	int chatPortNum;
 	int filePortNum;
 
-	Map<String, ChatRoom> chatRooms;// 룸정보를 가지고 있는 맵!!very important
+//	Map<String, ChatRoom> chatRooms;// 룸정보를 가지고 있는 맵!!very important
+	Rooms rooms;
+	
 	Properties properties;
 
 	public RainServer() {
@@ -40,9 +42,9 @@ public class RainServer {
 		this.filePortNum = Integer.parseInt(properties.getProperty("file"));
 
 		// ChatRoom을 만든다.
-		ChatRoom chatRoom = new ChatRoom("_waiting_", "_admin_");
-		chatRooms = Collections.synchronizedMap(new HashMap<String, ChatRoom>());//
-
+//		ChatRoom chatRoom = new ChatRoom("_waiting_", "_admin_");
+//		chatRooms = Collections.synchronizedMap(new HashMap<String, ChatRoom>());//
+		rooms = new Rooms();
 	}
 
 	// 각 포트별로 serversocket을 생성하고,
@@ -63,6 +65,7 @@ public class RainServer {
 			while (true) {
 				chatSocket = chatSS.accept();
 				fileSocket = fileSS.accept();
+				
 				User user = new User();
 				user.setMsgSocket(chatSocket);
 				user.setFileSocket(fileSocket);
@@ -75,9 +78,9 @@ public class RainServer {
 
 				// 접속 유저를 대기방에 조인시킨다.
 
-				chatRooms.get("_waiting_").addMember(user);
+				//chatRooms.get("_waiting_").addMember(user);
 
-				ServerReceiver receiver = new ServerReceiver(user, chatRooms);
+				ServerReceiver receiver = new ServerReceiver(user, rooms);
 				receiver.start();
 
 			}
